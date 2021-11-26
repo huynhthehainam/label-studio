@@ -136,7 +136,8 @@ class MLApi(BaseHTTPAPI):
         except ValueError as e:
             # logger.warning(f'Error parsing JSON response from {url}. Response: {response.content}', exc_info=True)
             return MLApiResult(
-                url, request, {'error': str(e), 'response': response.content}, headers, 'error',
+                url, request, {'error': str(
+                    e), 'response': response.content}, headers, 'error',
                 status_code=status_code
             )
         # if verbose:
@@ -149,11 +150,13 @@ class MLApi(BaseHTTPAPI):
 
     def train(self, project, use_ground_truth=False):
         # get only tasks with annotations
-        tasks = project.tasks.annotate(num_annotations=Count('annotations')).filter(num_annotations__gt=0)
+        tasks = project.tasks.annotate(num_annotations=Count(
+            'annotations')).filter(num_annotations__gt=0)
 
         # create serialized tasks with annotations: {"data": {...}, "annotations": [{...}], "predictions": [{...}]}
         tasks_ser = ExportDataSerializer(tasks, many=True).data
-        logger.debug(f'{len(tasks_ser)} tasks with annotations are sent to ML backend for training.')
+        logger.debug(
+            f'{len(tasks_ser)} tasks with annotations are sent to ML backend for training.')
         request = {
             'annotations': tasks_ser,
             'project': self._create_project_uid(project),
@@ -161,7 +164,8 @@ class MLApi(BaseHTTPAPI):
             'params': {
                 'login': project.task_data_login,
                 'password': project.task_data_password
-            }
+            },
+            'hyper_params': project.ml_params
         }
         return self._request('train', request, verbose=False)
 
