@@ -88,6 +88,8 @@ class Project(ProjectMixin, models.Model):
     objects = ProjectManager()
     __original_label_config = None
 
+    ml_params =  JSONField(_('ml params'), null=True, default=dict, help_text='Machine learning training params')
+
     title = models.CharField(
         _('title'),
         null=True,
