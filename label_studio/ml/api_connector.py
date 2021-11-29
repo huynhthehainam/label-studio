@@ -166,7 +166,7 @@ class MLApi(BaseHTTPAPI):
                 'password': project.task_data_password
             },
             'hyper_params': project.ml_params,
-            'arguments':   project.ml_arguments if type(project.ml_arguments) is list else [],
+            'augments':   project.ml_augments if type(project.ml_augments) is list else [],
         }
         return self._request('train', request, verbose=False)
 

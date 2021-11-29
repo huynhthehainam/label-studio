@@ -93,8 +93,8 @@ class Project(ProjectMixin, models.Model):
     ml_params = JSONField(_('ml params'), null=True, default=dict,
                           help_text='Machine learning training params')
 
-    ml_arguments = JSONField(_('ml arguments'), null=True, default=[
-    ], help_text='Machine learning training data arguments')
+    ml_augments = JSONField(_('ml arguments'), null=True, default=list,
+                            help_text='Machine learning training data arguments')
 
     title = models.CharField(
         _('title'),

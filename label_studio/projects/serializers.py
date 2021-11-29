@@ -22,24 +22,25 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     """
 
     task_number = serializers.IntegerField(default=None, read_only=True,
-                                        help_text='Total task number in project')
+                                           help_text='Total task number in project')
     total_annotations_number = serializers.IntegerField(default=None, read_only=True,
-                                                    help_text='Total annotations number in project including '
-                                                              'skipped_annotations_number and ground_truth_number.')
+                                                        help_text='Total annotations number in project including '
+                                                        'skipped_annotations_number and ground_truth_number.')
     total_predictions_number = serializers.IntegerField(default=None, read_only=True,
-                                                    help_text='Total predictions number in project including '
-                                                              'skipped_annotations_number, ground_truth_number, and '
-                                                              'useful_annotation_number.')
+                                                        help_text='Total predictions number in project including '
+                                                        'skipped_annotations_number, ground_truth_number, and '
+                                                        'useful_annotation_number.')
     useful_annotation_number = serializers.IntegerField(default=None, read_only=True,
-                                                     help_text='Useful annotation number in project not including '
-                                                               'skipped_annotations_number and ground_truth_number. '
-                                                               'Total annotations = annotation_number + '
-                                                               'skipped_annotations_number + ground_truth_number')
+                                                        help_text='Useful annotation number in project not including '
+                                                        'skipped_annotations_number and ground_truth_number. '
+                                                        'Total annotations = annotation_number + '
+                                                        'skipped_annotations_number + ground_truth_number')
     ground_truth_number = serializers.IntegerField(default=None, read_only=True,
-                                            help_text='Honeypot annotation number in project')
+                                                   help_text='Honeypot annotation number in project')
     skipped_annotations_number = serializers.IntegerField(default=None, read_only=True,
-                                                      help_text='Skipped by collaborators annotation number in project')
-    num_tasks_with_annotations = serializers.IntegerField(default=None, read_only=True, help_text='Tasks with annotations count')
+                                                          help_text='Skipped by collaborators annotation number in project')
+    num_tasks_with_annotations = serializers.IntegerField(
+        default=None, read_only=True, help_text='Tasks with annotations count')
     created_by = UserSimpleSerializer(default=CreatedByFromContext())
 
     parsed_label_config = SerializerMethodField(default=None, read_only=True,
@@ -66,12 +67,14 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         initial_data = data
         data = super().to_internal_value(data)
         if 'start_training_on_annotation_update' in initial_data:
-            data['min_annotations_to_start_training'] = int(initial_data['start_training_on_annotation_update'])
+            data['min_annotations_to_start_training'] = int(
+                initial_data['start_training_on_annotation_update'])
         return data
 
     class Meta:
         model = Project
-        extra_kwargs = {'memberships': {'required': False}, 'title': {'required': False}, 'created_by': {'required': False}}
+        extra_kwargs = {'memberships': {'required': False}, 'title': {
+            'required': False}, 'created_by': {'required': False}}
         fields = ['id', 'title', 'description', 'label_config', 'expert_instruction', 'show_instruction', 'show_skip_button',
                   'enable_empty_annotation', 'show_annotation_history', 'organization', 'color',
                   'maximum_annotations', 'is_published', 'model_version', 'is_draft', 'created_by', 'created_at',
@@ -81,7 +84,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
                   'total_annotations_number', 'total_predictions_number', 'sampling', 'show_ground_truth_first',
                   'show_overlap_first', 'overlap_cohort_percentage', 'task_data_login', 'task_data_password',
                   'control_weights', 'parsed_label_config', 'evaluate_predictions_automatically',
-                  'config_has_control_tags','ml_params']
+                  'config_has_control_tags', 'ml_params', 'ml_augments']
 
     def validate_label_config(self, value):
         if self.instance is None:
