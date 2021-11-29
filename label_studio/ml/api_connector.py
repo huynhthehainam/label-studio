@@ -165,6 +165,8 @@ class MLApi(BaseHTTPAPI):
                 'login': project.task_data_login,
                 'password': project.task_data_password
             },
+            'hostname': settings.HOSTNAME if settings.HOSTNAME else ('http://localhost:' + settings.INTERNAL_PORT),
+            'access_token': project.created_by.auth_token.key,
             'hyper_params': project.ml_params,
             'augments':   project.ml_augments if type(project.ml_augments) is list else [],
         }
@@ -181,6 +183,8 @@ class MLApi(BaseHTTPAPI):
                 'password': project.task_data_password,
                 'context': context,
             },
+            'hostname': settings.HOSTNAME if settings.HOSTNAME else ('http://localhost:' + settings.INTERNAL_PORT),
+            'access_token': project.created_by.auth_token.key
         }
         return self._request('predict', request, verbose=False)
 
